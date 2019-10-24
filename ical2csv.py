@@ -27,7 +27,7 @@ event = CalendarEvent("event")
 def open_cal():
     if os.path.isfile(filename):
         if file_extension == 'ics':
-            print "Extracting events from file:", filename, "\n"
+            print("Extracting events from file:", filename, "\n")
             f = open(sys.argv[1], 'rb')
             gcal = Calendar.from_ical(f.read())
 
@@ -42,12 +42,12 @@ def open_cal():
                 event.url = component.get('URL')
             f.close()
         else:
-            print "You entered ", filename, ". "
-            print file_extension.upper(), " is not a valid file format. Looking for an ICS file."
+            print("You entered ", filename, ". ")
+            print(file_extension.upper(), " is not a valid file format. Looking for an ICS file.")
             exit(0)
     else:
-        print "I can't find the file ", filename, "."
-        print "Please enter an ics file located in the same folder as this script."
+        print("I can't find the file ", filename, ".")
+        print("Please enter an ics file located in the same folder as this script.")
         exit(0)
 
 
@@ -60,21 +60,21 @@ def csv_write(icsfile):
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
             wr.writerow(headers)
             wr.writerow(values)
-            print "Wrote to ", csvfile, "\n"
+            print("Wrote to ", csvfile, "\n")
     except IOError:
-        print "Could not open file! Please close Excel!"
+        print("Could not open file! Please close Excel!")
         exit(0)
 
 
 def debug_event(class_name):
-    print "Contents of ", class_name.name, ":"
-    print class_name.summary
-    print class_name.uid
-    print class_name.description
-    print class_name.location
-    print class_name.start
-    print class_name.end
-    print class_name.url, "\n"
+    print("Contents of ", class_name.name, ":")
+    print(class_name.summary)
+    print(class_name.uid)
+    print(class_name.description)
+    print(class_name.location)
+    print(class_name.start)
+    print(class_name.end)
+    print(class_name.url, "\n")
 
 open_cal()
 csv_write(filename)
