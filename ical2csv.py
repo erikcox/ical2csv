@@ -21,7 +21,7 @@ class CalendarEvent:
     def __init__(self, name):
         self.name = name
 
-event = CalendarEvent("event")
+events = []
 
 
 def open_cal():
@@ -31,15 +31,21 @@ def open_cal():
             f = open(sys.argv[1], 'rb')
             gcal = Calendar.from_ical(f.read())
 
-            # TODO: Let this parse multiple events in one ics file
             for component in gcal.walk():
+                event = CalendarEvent("event")
+                if component.get('SUMMARY') == None: continue #skip blank items
                 event.summary = component.get('SUMMARY')
                 event.uid = component.get('UID')
                 event.description = component.get('DESCRIPTION')
                 event.location = component.get('LOCATION')
-                event.start = component.get('dtstart').dt
-                event.end = component.get('dtend').dt
+                if hasattr(component.get('dtstart'), 'dt'):
+                    event.start = component.get('dtstart').dt
+                if hasattr(component.get('dtend'), 'dt'):
+                    event.end = component.get('dtend').dt
+
+
                 event.url = component.get('URL')
+                events.append(event)
             f.close()
         else:
             print("You entered ", filename, ". ")
@@ -51,15 +57,15 @@ def open_cal():
         exit(0)
 
 
-# TODO: make a create and an append method for use with multiple events in one file
 def csv_write(icsfile):
     csvfile = icsfile[:-3] + "csv"
     try:
-        with open(csvfile, 'wb') as myfile:
-            values = (event.summary, event.uid, event.description, event.location, event.start, event.end, event.url)
+        with open(csvfile, 'w') as myfile:
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
             wr.writerow(headers)
-            wr.writerow(values)
+            for event in events:
+                values = (event.summary, event.uid, event.description, event.location, event.start, event.end, event.url)
+                wr.writerow(values)
             print("Wrote to ", csvfile, "\n")
     except IOError:
         print("Could not open file! Please close Excel!")
@@ -78,4 +84,4 @@ def debug_event(class_name):
 
 open_cal()
 csv_write(filename)
-debug_event(event)
+#debug_event(event)
