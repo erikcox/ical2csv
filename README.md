@@ -12,7 +12,7 @@ Download the `ical2csv.py` file.
 	*  [**Homepage**](http://icalendar.readthedocs.org/)
 	*  [**Code**](http://github.com/collective/icalendar)
     * **Installation**: `pip install icalendar`
-* ***Python* 2**
+* ***Python* 3**
 
 ## Usage
 
@@ -31,12 +31,13 @@ Ex: `python ical2csv event.ics`
 ## Credits
 
 Lead Developer - [Erik Cox]([https://github.com/erikcox/](https://github.com/erikcox/))
+Python 3 compatibility and improvements - [bozoslivehere]([https://github.com/bozoslivehere/])
 
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Erik Cox
+Copyright (c) 2019 Erik Cox
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
