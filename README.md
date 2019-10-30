@@ -31,6 +31,7 @@ Ex: `python ical2csv event.ics`
 ## Credits
 
 Lead Developer - [Erik Cox]([https://github.com/erikcox/](https://github.com/erikcox/))
+
 Python 3 compatibility and improvements - [bozoslivehere]([https://github.com/bozoslivehere/])
 
 ## License
