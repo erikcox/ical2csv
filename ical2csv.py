@@ -64,7 +64,7 @@ def csv_write(icsfile):
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
             wr.writerow(headers)
             for event in events:
-                values = (event.summary, event.uid, event.description, event.location, event.start, event.end, event.url)
+                values = (event.summary.encode('utf-8'), event.uid, event.description.encode('utf-8'), event.location, event.start, event.end, event.url)
                 wr.writerow(values)
             print("Wrote to ", csvfile, "\n")
     except IOError:
