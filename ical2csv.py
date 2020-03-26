@@ -36,6 +36,7 @@ def open_cal():
                 if component.get('SUMMARY') == None: continue #skip blank items
                 event.summary = component.get('SUMMARY')
                 event.uid = component.get('UID')
+                if component.get('DESCRIPTION') == None: continue #skip blank items
                 event.description = component.get('DESCRIPTION')
                 event.location = component.get('LOCATION')
                 if hasattr(component.get('dtstart'), 'dt'):
