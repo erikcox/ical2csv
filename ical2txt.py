@@ -1,9 +1,12 @@
 #!/usr/bin/python3
+# Note: This is just one example of how you can format events. Feel free to adjust to your own needs.
+# /Martin - martin.moller@gmail.com
 
 import sys
 import os.path
 from icalendar import Calendar
 import csv
+from bs4 import BeautifulSoup
 
 filename = sys.argv[1]
 # TODO: use regex to get file extension (chars after last period), in case it's not exactly 3 chars.
@@ -24,6 +27,25 @@ class CalendarEvent:
         self.name = name
 
 events = []
+
+def removehtml(html):
+    # Almost word for word copy from here: https://stackoverflow.com/questions/328356/extracting-text-from-html-file-using-python
+
+    soup = BeautifulSoup(html, features="html.parser")
+    # kill all script and style elements
+    for script in soup(["script", "style"]):
+        script.extract() # remove it
+
+    text = soup.get_text() # Get plain text
+
+    # break into lines and remove leading and trailing space on each
+    lines = (line.strip() for line in text.splitlines())
+    # break multi-headlines into a line each
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    # drop blank lines
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+
+    return text
 
 
 def open_cal():
@@ -61,16 +83,28 @@ def open_cal():
         exit(0)
 
 
-def csv_write(icsfile):
-    csvfile = icsfile[:-3] + "csv"
+def txt_write(icsfile):
+    txtfile = icsfile[:-3] + "txt"
+    prevdate=""
     try:
-        with open(csvfile, 'w') as myfile:
-            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-            wr.writerow(headers)
+        with open(txtfile, 'w') as myfile:
             for event in sortedevents:
-                values = (event.summary.encode('utf8').decode(), event.uid, event.description.encode('uft8').decode(), event.location, event.start, event.end, event.url)
-                wr.writerow(values)
-            print("Wrote to ", csvfile, "\n")
+
+                if prevdate != event.start.strftime("%Y-%m-%d"): # Make a header for each day
+                    prevdate = event.start.strftime("%Y-%m-%d")
+                    myfile.write("\nMMO (IAM) Worklog, " + prevdate + "\n=============================\n")
+
+                if event.end == None: print("Event without end. Me no like: " + prevdate + " - " + event.summary.encode('utf-8').decode())
+                duration = event.end - event.start
+                ds = duration.total_seconds()
+                hours = divmod(ds, 3600)[0]
+                minutes = divmod(ds,3600)[1]/60
+                values = event.start.strftime("%H:%M:%S") + " - " + event.end.strftime("%H:%M:%S") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
+                if event.location != '': values = values + " [" + event.location + "]" # Only include location if there is one
+                if event.description.rfind('joining options') == -1: # Skip description if it has Google Meeting information
+                    values = values + "\n" + removehtml(event.description.encode('utf-8').decode())
+                myfile.write(values+"\n")
+            print("Wrote to ", txtfile, "\n")
     except IOError:
         print("Could not open file! Please close Excel!")
         exit(0)
@@ -88,5 +122,5 @@ def debug_event(class_name):
 
 open_cal()
 sortedevents=sorted(events, key=lambda obj: obj.start) # Needed to sort events. They are not fully chronological in a Google Calendard export ...
-csv_write(filename)
+txt_write(filename)
 #debug_event(event)
