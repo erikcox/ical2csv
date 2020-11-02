@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-# Note: This is just one example of how you can format events. Feel free to adjust to your own needs.
-# /Martin - martin.moller@gmail.com
 
 import sys
 import os.path
@@ -86,17 +84,24 @@ def open_cal():
 def txt_write(icsfile):
     txtfile = icsfile[:-3] + "txt"
     prevdate=""
+    spent=0
     try:
         with open(txtfile, 'w') as myfile:
             for event in sortedevents:
 
                 if prevdate != event.start.strftime("%Y-%m-%d"): # Make a header for each day
+                    if prevdate != '': # If you don't want a summary of the time spent added, comment this section. 
+                        th=divmod(spent, 3600)[0]
+                        tm=divmod(spent, 3600)[1]/60
+                        myfile.write("Time Total: " + '{:02.0f}'.format(th) + ":" + '{:02.0f}'.format(tm) + "\n")
+                        spent=0
                     prevdate = event.start.strftime("%Y-%m-%d")
                     myfile.write("\nMMO (IAM) Worklog, " + prevdate + "\n=============================\n")
 
                 if event.end == None: print("Event without end. Me no like: " + prevdate + " - " + event.summary.encode('utf-8').decode())
                 duration = event.end - event.start
                 ds = duration.total_seconds()
+                spent += ds
                 hours = divmod(ds, 3600)[0]
                 minutes = divmod(ds,3600)[1]/60
                 values = event.start.strftime("%H:%M:%S") + " - " + event.end.strftime("%H:%M:%S") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
@@ -121,6 +126,6 @@ def debug_event(class_name):
     print(class_name.url, "\n")
 
 open_cal()
-sortedevents=sorted(events, key=lambda obj: obj.start) # Needed to sort events. They are not fully chronological in a Google Calendard export ...
+sortedevents=sorted(events, key=lambda obj: obj.start)
 txt_write(filename)
 #debug_event(event)
