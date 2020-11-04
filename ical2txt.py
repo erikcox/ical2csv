@@ -5,6 +5,9 @@ import os.path
 from icalendar import Calendar
 import csv
 from bs4 import BeautifulSoup
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module='bs4') # We don't want warnings about URL's. We just what the URL printed, if there.
 
 filename = sys.argv[1]
 # TODO: use regex to get file extension (chars after last period), in case it's not exactly 3 chars.
@@ -85,6 +88,8 @@ def txt_write(icsfile):
     txtfile = icsfile[:-3] + "txt"
     prevdate=""
     spent=0
+    evcount=0
+    print("Processing events :", end=" ")
     try:
         with open(txtfile, 'w') as myfile:
             for event in sortedevents:
@@ -104,12 +109,20 @@ def txt_write(icsfile):
                 spent += ds
                 hours = divmod(ds, 3600)[0]
                 minutes = divmod(ds,3600)[1]/60
+                description=removehtml(event.description.encode('utf-8').decode())
                 values = event.start.strftime("%H:%M:%S") + " - " + event.end.strftime("%H:%M:%S") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
                 if event.location != '': values = values + " [" + event.location + "]" # Only include location if there is one
-                if event.description.rfind('joining options') == -1: # Skip description if it has Google Meeting information
-                    values = values + "\n" + removehtml(event.description.encode('utf-8').decode())
+
+                # Remove Google Meet and Skype Meeting part of description
+                trimmed=description.split('-::~')[0].split('......')[0]
+                #print("DescLen: " + str(len(description)) + " TrimmedLen: " + str(len(trimmed)) + " : " + trimmed) # For debugging
+                description=trimmed
+                if description != '':
+                    values = values + "\n" + description + "\n"
                 myfile.write(values+"\n")
-            print("Wrote to ", txtfile, "\n")
+                print("", end=".")
+                evcount+=1
+            print("\n\nWrote " + str(evcount) + " events to ", txtfile, "\n")
     except IOError:
         print("Could not open file! Please close Excel!")
         exit(0)
