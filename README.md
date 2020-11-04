@@ -53,10 +53,13 @@ Ex: `python ical2txt.py event.ics` / `python3 ical2txt.py event.ics`
 ## Credits
 
 Lead Developer - ical2csv - [Erik Cox](https://github.com/erikcox/)
+
 Developer - ical2txt - [Martin Møller](https://github.com/martinm76)
 
 Python 3 compatibility and improvements - [bozoslivehere](https://github.com/bozoslivehere/)
-Logic and adjustments to sort events chronologically (Google Calendar doesn't do this in it's export) - [Martin Møller](https://github.com/martinm76)
+
+Logic and adjustments to sort events chronologically (Google Calendar doesn't do this in its export) - [Martin Møller](https://github.com/martinm76)
+
 Removal of HTML code from events (currently only ical2txt) - [Martin Møller](https://github.com/martinm76)
 
 ## License
