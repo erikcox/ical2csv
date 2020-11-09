@@ -1,4 +1,4 @@
-# ical2csv
+# ical2csv w/sorted events by start date
 
 ![alt text](images/ics.png) → ![alt text](images/python.png) → ![alt text](images/csv.png) 
 
@@ -14,11 +14,33 @@ Download the `ical2csv.py` file.
     * **Installation**: `pip install icalendar`
 * ***Python* 3**
 
-## Usage
+***Note:*** pip may be called pip3 on some systems with both python2 and python3 as options.
+
+## Usage of ical2csv
 
 Call the script and pass in the location of the ics file.
 
-Ex: `python ical2csv event.ics`
+Ex: `python ical2csv.py event.ics`
+
+# ical2txt w/sorted events by start date
+
+Like ical2csv.py, it parses an ics file and writes the output to a text-file. This is more of an agenda style.
+
+## Installation of ical2txt
+Download the script or clone the project and get it from there.
+
+### Dependencies for ical2txt
+* ***setuptools*** (just in case : pip3 install setuptools)
+* ***BeautifulSoup4*** (pip3 install beautifulsoup4)
+* ***icalendar*** (pip3 install icalendar)
+	*  [**Homepage**](http://icalendar.readthedocs.org/)
+	*  [**Code**](http://github.com/collective/icalendar)
+
+## Usage of ical2txt
+
+Call the script and pass in the location of the ics file.
+
+Ex: `python ical2txt.py event.ics` / `python3 ical2txt.py event.ics`
 
 ## Contributing
 
@@ -30,9 +52,15 @@ Ex: `python ical2csv event.ics`
 
 ## Credits
 
-Lead Developer - [Erik Cox](https://github.com/erikcox/)
+Lead Developer - ical2csv - [Erik Cox](https://github.com/erikcox/)
+
+Developer - ical2txt - [Martin Møller](https://github.com/martinm76)
 
 Python 3 compatibility and improvements - [bozoslivehere](https://github.com/bozoslivehere/)
+
+Logic and adjustments to sort events chronologically (Google Calendar doesn't do this in its export) - [Martin Møller](https://github.com/martinm76)
+
+Removal of HTML code from events (currently only ical2txt) - [Martin Møller](https://github.com/martinm76)
 
 ## License
 

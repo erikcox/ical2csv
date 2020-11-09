@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import os.path
 from icalendar import Calendar
@@ -33,6 +35,7 @@ def open_cal():
 
             for component in gcal.walk():
                 event = CalendarEvent("event")
+                if component.get('TRANSP') == 'TRANSPARENT': continue #skip event that have not been accepted
                 if component.get('SUMMARY') == None: continue #skip blank items
                 event.summary = component.get('SUMMARY')
                 event.uid = component.get('UID')
@@ -64,8 +67,8 @@ def csv_write(icsfile):
         with open(csvfile, 'w') as myfile:
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
             wr.writerow(headers)
-            for event in events:
-                values = (event.summary.encode('utf-8'), event.uid, event.description.encode('utf-8'), event.location, event.start, event.end, event.url)
+            for event in sortedevents:
+                values = (event.summary.encode('utf8').decode(), event.uid, event.description.encode('uft8').decode(), event.location, event.start, event.end, event.url)
                 wr.writerow(values)
             print("Wrote to ", csvfile, "\n")
     except IOError:
@@ -84,5 +87,6 @@ def debug_event(class_name):
     print(class_name.url, "\n")
 
 open_cal()
+sortedevents=sorted(events, key=lambda obj: obj.start) # Needed to sort events. They are not fully chronological in a Google Calendard export ...
 csv_write(filename)
 #debug_event(event)
