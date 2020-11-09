@@ -6,6 +6,7 @@ from icalendar import Calendar
 import csv
 from bs4 import BeautifulSoup
 import warnings
+from dateutil.parser import parse
 
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4') # We don't want warnings about URL's. We just what the URL printed, if there.
 
@@ -89,42 +90,54 @@ def txt_write(icsfile):
     prevdate=""
     spent=0
     evcount=0
+    evskip=0
+    istart=0
+    istop=4102441200.0 # The year 2100. Hopefully this will not be in use by then ...
+    if sys.argv[2] != '':
+        istart=parse(sys.argv[2]).timestamp()
+    if sys.argv[3] != '':
+        istop=parse(sys.argv[3]).timestamp()
     print("Processing events :", end=" ")
     try:
         with open(txtfile, 'w') as myfile:
             for event in sortedevents:
 
-                if prevdate != event.start.strftime("%Y-%m-%d"): # Make a header for each day
+                if prevdate != event.start.strftime("%Y-%m-%d") and spent > 0: # Make a header for each day
                     if prevdate != '': # If you don't want a summary of the time spent added, comment this section. 
                         th=divmod(spent, 3600)[0]
                         tm=divmod(spent, 3600)[1]/60
-                        myfile.write("Time Total: " + '{:02.0f}'.format(th) + ":" + '{:02.0f}'.format(tm) + "\n")
+                        myfile.write("\nTime Total: " + '{:02.0f}'.format(th) + ":" + '{:02.0f}'.format(tm) + "\n")
                         spent=0
-                    prevdate = event.start.strftime("%Y-%m-%d")
-                    myfile.write("\nMMO (IAM) Worklog, " + prevdate + "\n=============================\n")
+                if event.start.timestamp() > istart and event.start.timestamp() < istop:
+                    if prevdate != event.start.strftime("%Y-%m-%d"): # Make a header for each day
+                        prevdate = event.start.strftime("%Y-%m-%d")
+                        myfile.write("\nWorklog, " + prevdate + "\n===================\n")
 
-                if event.end == None: print("Event without end. Me no like: " + prevdate + " - " + event.summary.encode('utf-8').decode())
-                duration = event.end - event.start
-                ds = duration.total_seconds()
-                spent += ds
-                hours = divmod(ds, 3600)[0]
-                minutes = divmod(ds,3600)[1]/60
-                description=removehtml(event.description.encode('utf-8').decode())
-                values = event.start.strftime("%H:%M:%S") + " - " + event.end.strftime("%H:%M:%S") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
-                if event.location != '': values = values + " [" + event.location + "]" # Only include location if there is one
+                    duration = event.end - event.start
+                    ds = duration.total_seconds()
+                    spent += ds
+                    hours = divmod(ds, 3600)[0]
+                    minutes = divmod(ds,3600)[1]/60
+                    description=removehtml(event.description.encode('utf-8').decode())
+                    values = event.start.strftime("%H:%M:%S") + " - " + event.end.strftime("%H:%M:%S") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
+                    if event.location != '': values = values + " [" + event.location + "]" # Only include location if there is one
 
-                # Remove Google Meet and Skype Meeting part of description
-                trimmed=description.split('-::~')[0].split('......')[0]
-                #print("DescLen: " + str(len(description)) + " TrimmedLen: " + str(len(trimmed)) + " : " + trimmed) # For debugging
-                description=trimmed
-                if description != '':
-                    values = values + "\n" + description + "\n"
-                myfile.write(values+"\n")
-                print("", end=".")
-                evcount+=1
-            print("\n\nWrote " + str(evcount) + " events to ", txtfile, "\n")
+                    # Remove Google Meet and Skype Meeting part of description
+                    trimmed=description.split('-::~')[0].split('......')[0]
+                    #print("DescLen: " + str(len(description)) + " TrimmedLen: " + str(len(trimmed)) + " : " + trimmed) # For debugging
+                    description=trimmed
+                    if description != '':
+                        values = values + "\n" + description + "\n"
+                    myfile.write(values+"\n")
+                    print("", end=".")
+                    evcount+=1
+                else:
+                    print("", end="S")
+                    evskip+=1
+
+            print("\n\nWrote " + str(evcount) + " events to ", txtfile, " and skipped ", str(evskip), " events\n")
     except IOError:
-        print("Could not open file! Please close Excel!")
+        print("Could not open file!")
         exit(0)
 
 
