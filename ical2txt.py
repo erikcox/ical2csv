@@ -119,7 +119,7 @@ def txt_write(icsfile):
                     hours = divmod(ds, 3600)[0]
                     minutes = divmod(ds,3600)[1]/60
                     description=removehtml(event.description.encode('utf-8').decode())
-                    values = event.start.strftime("%H:%M:%S") + " - " + event.end.strftime("%H:%M:%S") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
+                    values = event.start.strftime("%H:%M") + " - " + event.end.strftime("%H:%M") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
                     if event.location != '': values = values + " [" + event.location + "]" # Only include location if there is one
 
                     # Remove Google Meet and Skype Meeting part of description
