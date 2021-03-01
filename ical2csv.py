@@ -68,7 +68,7 @@ def csv_write(icsfile):
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
             wr.writerow(headers)
             for event in sortedevents:
-                values = (event.summary.encode('utf8').decode(), event.uid, event.description.encode('uft8').decode(), event.location, event.start, event.end, event.url)
+                values = (event.summary.encode('utf8').decode(), event.uid, event.description.encode('utf8').decode(), event.location, event.start, event.end, event.url)
                 wr.writerow(values)
             print("Wrote to ", csvfile, "\n")
     except IOError:
