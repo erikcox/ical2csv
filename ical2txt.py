@@ -101,7 +101,7 @@ def txt_write(icsfile):
     spent=0
     evcount=0
     evskip=0
-    print("Processing events :", end=" ")
+    sys.stdout.write("Processing events : ")
     try:
         with open(txtfile, 'w') as myfile:
             for event in sortedevents:
@@ -133,11 +133,17 @@ def txt_write(icsfile):
                     if description != '':
                         values = values + "\n" + description + "\n"
                     myfile.write(values+"\n")
-                    print("", end=".")
+                    sys.stdout.write(".")
+                    sys.stdout.flush()
                     evcount+=1
                 else:
-                    print("", end="S")
+                    sys.stdout.write("S")
+                    sys.stdout.flush()
                     evskip+=1
+
+            th=divmod(spent, 3600)[0]
+            tm=divmod(spent, 3600)[1]/60
+            myfile.write("\nTime Total: " + '{:02.0f}'.format(th) + ":" + '{:02.0f}'.format(tm) + "\n")
 
             print("\n\nWrote " + str(evcount) + " events to ", txtfile, " and skipped ", str(evskip), " events\n")
     except IOError:
@@ -157,7 +163,6 @@ def debug_event(class_name):
 
 now=datetime.datetime.now()
 istart=datetime.datetime.fromtimestamp(0) # Start of UNIX epoch (1970-01-01T00:00:00)
-#istop=datetime.datetime.fromtimestamp(4102441200) # The year 2100. Hopefully this will not be in use by then ...
 istop=now+datetime.timedelta(seconds=157680000) # Stop 5 years in the future, if no enddate is given, to make sure reucurring events don't go on forever ...
 
 if len(sys.argv) > 3:
@@ -166,7 +171,7 @@ if len(sys.argv) > 3:
    if sys.argv[3] != '':
       istop=parse(sys.argv[3])
 
-open_cal()
-sortedevents=sorted(events, key=lambda obj: obj.start)
-txt_write(filename)
+open_cal()          # Open ics file and do initial parsing of events
+sortedevents=sorted(events, key=lambda obj: obj.start) # Make sure events are in chronological order
+txt_write(filename) # Write the matching events to the textfile. With recurring_ical_events, scoping is already done.
 #debug_event(event)
