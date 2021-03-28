@@ -49,7 +49,7 @@ Note: You can limit output to a certain time period. Useful for week logs and th
 
 `./ical2txt.py myexport.ics 2021-01-01T00:00:00 2021-01-31T23:59:59`
 
-*NEW AS OF 2021-03-28:* Recurring events are now actually processed in ical2txt.py. If no end date is given 5 years from now is chosen.
+**NEW AS OF 2021-03-28:** Recurring events are now actually processed in ical2txt.py. If no end date is given 5 years from now is chosen.
 
 ## Contributing
 
