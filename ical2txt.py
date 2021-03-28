@@ -68,7 +68,7 @@ def open_cal():
 #           for component in gcal.walk():
             for component in revents:
                 event = CalendarEvent("event")
-                v=(dir(component).count('get'))
+                v=(dir(component).count('get')) # Only proces data if object is a valid event
                 if (v != 0):
                      if component.get('TRANSP') == 'TRANSPARENT': continue #skip all day events and the like
                      if component.get('SUMMARY') == None: continue #skip blank items
@@ -155,15 +155,15 @@ def debug_event(class_name):
     print(class_name.end)
     print(class_name.url, "\n")
 
+now=datetime.datetime.now()
 istart=datetime.datetime.fromtimestamp(0) # Start of UNIX epoch (1970-01-01T00:00:00)
-istop=datetime.datetime.fromtimestamp(4102441200) # The year 2100. Hopefully this will not be in use by then ...
+#istop=datetime.datetime.fromtimestamp(4102441200) # The year 2100. Hopefully this will not be in use by then ...
+istop=now+datetime.timedelta(seconds=157680000) # Stop 5 years in the future, if no enddate is given, to make sure reucurring events don't go on forever ...
 
 if len(sys.argv) > 3:
    if sys.argv[2] != '':
-#      istart=parse(sys.argv[2]).timestamp()
       istart=parse(sys.argv[2])
    if sys.argv[3] != '':
-#      istop=parse(sys.argv[3]).timestamp()
       istop=parse(sys.argv[3])
 
 open_cal()
