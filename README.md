@@ -35,12 +35,21 @@ Download the script or clone the project and get it from there.
 * ***icalendar*** (pip3 install icalendar)
 	*  [**Homepage**](http://icalendar.readthedocs.org/)
 	*  [**Code**](http://github.com/collective/icalendar)
+* ***recurring-ical-events*** (pip3 install recurring-ical-events)
 
 ## Usage of ical2txt
 
 Call the script and pass in the location of the ics file.
 
 Ex: `python ical2txt.py event.ics` / `python3 ical2txt.py event.ics`
+
+Note: You can limit output to a certain time period. Useful for week logs and the like:
+
+`./ical2txt.py myexport.ics 20210101 20211231`
+
+`./ical2txt.py myexport.ics 2021-01-01T00:00:00 2021-01-31T23:59:59`
+
+**NEW AS OF 2021-03-28:** Recurring events are now actually processed in ical2txt.py. If no end date is given 5 years from now is chosen.
 
 ## Contributing
 
