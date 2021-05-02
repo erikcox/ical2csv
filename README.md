@@ -12,6 +12,8 @@ Download the `ical2csv.py` file.
 	*  [**Homepage**](http://icalendar.readthedocs.org/)
 	*  [**Code**](http://github.com/collective/icalendar)
     * **Installation**: `pip install icalendar`
+* ***BeautifulSoup4*** (pip3 install beautifulsoup4)
+* ***recurring-ical-events*** (pip3 install recurring-ical-events)
 * ***Python* 3**
 
 ***Note:*** pip may be called pip3 on some systems with both python2 and python3 as options.
@@ -29,14 +31,6 @@ Like ical2csv.py, it parses an ics file and writes the output to a text-file. Th
 ## Installation of ical2txt
 Download the script or clone the project and get it from there.
 
-### Dependencies for ical2txt
-* ***setuptools*** (just in case : pip3 install setuptools)
-* ***BeautifulSoup4*** (pip3 install beautifulsoup4)
-* ***icalendar*** (pip3 install icalendar)
-	*  [**Homepage**](http://icalendar.readthedocs.org/)
-	*  [**Code**](http://github.com/collective/icalendar)
-* ***recurring-ical-events*** (pip3 install recurring-ical-events)
-
 ## Usage of ical2txt
 
 Call the script and pass in the location of the ics file.
@@ -50,6 +44,7 @@ Note: You can limit output to a certain time period. Useful for week logs and th
 `./ical2txt.py myexport.ics 2021-01-01T00:00:00 2021-01-31T23:59:59`
 
 **NEW AS OF 2021-03-28:** Recurring events are now actually processed in ical2txt.py. If no end date is given 5 years from now is chosen.
+**NEW AS OF 2021-05-02:** ical2csv.py update with same features as ical2txt.py, except removing Google/Skype meeting details.
 
 ## Contributing
 
@@ -64,12 +59,15 @@ Note: You can limit output to a certain time period. Useful for week logs and th
 Lead Developer - ical2csv - [Erik Cox](https://github.com/erikcox/)
 
 Developer - ical2txt - [Martin Møller](https://github.com/martinm76)
+Co-developer - ical2csv - [Martin Møller](https://github.com/martinm76)
 
 Python 3 compatibility and improvements - [bozoslivehere](https://github.com/bozoslivehere/)
 
 Logic and adjustments to sort events chronologically (Google Calendar doesn't do this in its export) - [Martin Møller](https://github.com/martinm76)
 
-Removal of HTML code from events (currently only ical2txt) - [Martin Møller](https://github.com/martinm76)
+Removal of HTML code from events - [Martin Møller](https://github.com/martinm76)
+Conversion of date object to datetime objects, to allow sort - [Martin Møller](https://github.com/martinm76)
+Timezone fixes [Martin Møller](https://github.com/martinm76)
 
 ## License
 
