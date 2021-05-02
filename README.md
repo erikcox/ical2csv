@@ -44,6 +44,7 @@ Note: You can limit output to a certain time period. Useful for week logs and th
 `./ical2txt.py myexport.ics 2021-01-01T00:00:00 2021-01-31T23:59:59`
 
 **NEW AS OF 2021-03-28:** Recurring events are now actually processed in ical2txt.py. If no end date is given 5 years from now is chosen.
+
 **NEW AS OF 2021-05-02:** ical2csv.py update with same features as ical2txt.py, except removing Google/Skype meeting details.
 
 ## Contributing
@@ -66,7 +67,9 @@ Python 3 compatibility and improvements - [bozoslivehere](https://github.com/boz
 Logic and adjustments to sort events chronologically (Google Calendar doesn't do this in its export) - [Martin Møller](https://github.com/martinm76)
 
 Removal of HTML code from events - [Martin Møller](https://github.com/martinm76)
+
 Conversion of date object to datetime objects, to allow sort - [Martin Møller](https://github.com/martinm76)
+
 Timezone fixes [Martin Møller](https://github.com/martinm76)
 
 ## License
