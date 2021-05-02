@@ -58,9 +58,9 @@ Note: You can limit output to a certain time period. Useful for week logs and th
 ## Credits
 
 Lead Developer - ical2csv - [Erik Cox](https://github.com/erikcox/)
+Co-developer - ical2csv - [Martin Møller](https://github.com/martinm76)
 
 Developer - ical2txt - [Martin Møller](https://github.com/martinm76)
-Co-developer - ical2csv - [Martin Møller](https://github.com/martinm76)
 
 Python 3 compatibility and improvements - [bozoslivehere](https://github.com/bozoslivehere/)
 
@@ -70,7 +70,7 @@ Removal of HTML code from events - [Martin Møller](https://github.com/martinm76
 
 Conversion of date object to datetime objects, to allow sort - [Martin Møller](https://github.com/martinm76)
 
-Timezone fixes [Martin Møller](https://github.com/martinm76)
+Timezone fixes - [Martin Møller](https://github.com/martinm76)
 
 ## License
 
