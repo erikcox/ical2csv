@@ -16,6 +16,8 @@ if len(sys.argv) <= 1:
     print("Even better, call it with start and end dates:\n")
     print(sys.argv[0] + " myexport.ics 20210101 20210201")
     print(sys.argv[0] + " myexport.ics 2021-01-01T00:00:00 2021-01-31T23:59:59\n")
+    print("NOTE: If you need data in another timezone than the system is set to, override like this before running the script:")
+    print("export TZ=\"Europe/Copenhagen\"\n")
     exit(1)
 
 filename = sys.argv[1]
@@ -78,10 +80,16 @@ def open_cal():
                      event.description = component.get('DESCRIPTION')
                      event.location = component.get('LOCATION')
                      if hasattr(component.get('dtstart'), 'dt'):
-                         event.start = component.get('dtstart').dt
+                         event.start = component.get('dtstart').dt.astimezone()
                      if hasattr(component.get('dtend'), 'dt'):
-                         event.end = component.get('dtend').dt
+                         event.end = component.get('dtend').dt.astimezone()
 
+                     if type(now) != type(event.start): # If we get a datetime.date object, convert to datetime.datetime
+                         event.start=datetime.datetime.combine(event.start, datetime.time.min)
+                     if type(now) != type(event.end): # If we get a datetime.date object, convert to datetime.datetime
+                         event.end=datetime.datetime.combine(event.end, datetime.time.max)
+                     event.start = event.start.astimezone()
+                     event.end = event.end.astimezone()
                      event.url = component.get('URL')
                      events.append(event)
             f.close()
@@ -124,7 +132,7 @@ def txt_write(icsfile):
                     minutes = divmod(ds,3600)[1]/60
                     description=removehtml(event.description.encode('utf-8').decode())
                     values = event.start.strftime("%H:%M") + " - " + event.end.strftime("%H:%M") + " (" + '{:02.0f}'.format(hours) + ":" + '{:02.0f}'.format(minutes) + ") " + event.summary.encode('utf-8').decode()
-                    if event.location != '': values = values + " [" + event.location + "]" # Only include location if there is one
+                    if event.location != '': values = values + " [" + event.location.encode('utf-8').decode() + "]" # Only include location if there is one
 
                     # Remove Google Meet and Skype Meeting part of description
                     trimmed=description.split('-::~')[0].split('......')[0]
@@ -171,7 +179,9 @@ if len(sys.argv) > 3:
    if sys.argv[3] != '':
       istop=parse(sys.argv[3])
 
+print("Opening ics file\n")
 open_cal()          # Open ics file and do initial parsing of events
+print("Sorting events\n")
 sortedevents=sorted(events, key=lambda obj: obj.start) # Make sure events are in chronological order
 txt_write(filename) # Write the matching events to the textfile. With recurring_ical_events, scoping is already done.
 #debug_event(event)
