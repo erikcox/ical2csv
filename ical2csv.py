@@ -4,6 +4,7 @@ import sys
 import os.path
 from icalendar import Calendar
 import csv
+from datetime import datetime, date
 
 filename = sys.argv[1]
 # TODO: use regex to get file extension (chars after last period), in case it's not exactly 3 chars.
@@ -44,8 +45,12 @@ def open_cal():
                 event.location = component.get('LOCATION')
                 if hasattr(component.get('dtstart'), 'dt'):
                     event.start = component.get('dtstart').dt
+                    if isinstance(event.start, date):
+                        event.start = datetime.combine(event.start, datetime.min.time())
                 if hasattr(component.get('dtend'), 'dt'):
                     event.end = component.get('dtend').dt
+                    if isinstance(event.end, date):
+                        event.end = datetime.combine(event.end, datetime.min.time())
 
 
                 event.url = component.get('URL')
